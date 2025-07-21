@@ -111,4 +111,29 @@ public class OrderDAOImpl implements OrderDAO {
         }
         return null;
     }
+
+    @Override
+    public List<Order> findByCustomerId(int customerId) {
+        List<Order> orders = new ArrayList<>();
+        String sql = "SELECT id_pedido, id_cliente, fecha_pedido, estado, metodo_pago, metodo_envio, total FROM pedidos WHERE id_cliente = ?";
+        try (Connection conn = getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, customerId);
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                orders.add(new Order(
+                    rs.getInt("id_pedido"),
+                    rs.getInt("id_cliente"),
+                    rs.getTimestamp("fecha_pedido"),
+                    rs.getString("estado"),
+                    rs.getString("metodo_pago"),
+                    rs.getString("metodo_envio"),
+                    rs.getDouble("total")
+                ));
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return orders;
+    }
 }

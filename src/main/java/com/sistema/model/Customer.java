@@ -19,8 +19,18 @@ public class Customer {
 
     public int getId() { return id; }
     public void setId(int id) { this.id = id; }
+    
+    // Métodos adicionales para compatibilidad con BD
+    public int getIdCliente() { return id; }
+    public void setIdCliente(int id) { this.id = id; }
+    
     public int getUserId() { return userId; }
     public void setUserId(int userId) { this.userId = userId; }
+    
+    // Métodos adicionales para compatibilidad con BD
+    public int getIdUsuario() { return userId; }
+    public void setIdUsuario(int userId) { this.userId = userId; }
+    
     public String getNombre() { return nombre; }
     public void setNombre(String nombre) { this.nombre = nombre; }
     public String getDireccion() { return direccion; }

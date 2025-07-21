@@ -15,27 +15,35 @@ public class ProductDAOImpl implements ProductDAO {
 
     private Connection getConnection() throws SQLException {
         return DBConnection.getConnection();
-    }
-
-    @Override
-    public void save(Product product) {
+    }    @Override
+    public boolean save(Product product) {
         String sql = "INSERT INTO productos (nombre, descripcion, precio, stock, categoria_id, imagen_url) VALUES (?, ?, ?, ?, ?, ?)";
         try (Connection conn = getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
+            
             stmt.setString(1, product.getNombre());
             stmt.setString(2, product.getDescripcion());
             stmt.setDouble(3, product.getPrecio());
             stmt.setInt(4, product.getStock());
             stmt.setInt(5, product.getCategoriaId());
             stmt.setString(6, product.getImagenUrl());
-            stmt.executeUpdate();
+            
+            return stmt.executeUpdate() > 0;
         } catch (SQLException e) {
-            throw new RuntimeException("Error saving product", e);
+            System.err.println("Error SQL al guardar producto: " + e.getMessage());
+            
+            // Verificar si es error de foreign key
+            if (e.getErrorCode() == 1452 || e.getMessage().contains("foreign key constraint")) {
+                System.err.println("Error: La categoría especificada no existe. Verificar que existe una categoría con ID: " + product.getCategoriaId());
+            }
+            
+            return false;
+        } catch (Exception e) {
+            System.err.println("Error general al guardar producto: " + e.getMessage());
+            return false;
         }
-    }
-
-    @Override
-    public void update(Product product) {
+    }@Override
+    public boolean update(Product product) {
         String sql = "UPDATE productos SET nombre = ?, descripcion = ?, precio = ?, stock = ?, categoria_id = ?, imagen_url = ? WHERE id_producto = ?";
         try (Connection conn = getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -46,21 +54,23 @@ public class ProductDAOImpl implements ProductDAO {
             stmt.setInt(5, product.getCategoriaId());
             stmt.setString(6, product.getImagenUrl());
             stmt.setInt(7, product.getId());
-            stmt.executeUpdate();
+            return stmt.executeUpdate() > 0;
         } catch (SQLException e) {
-            throw new RuntimeException("Error updating product", e);
+            System.err.println("Error updating product: " + e.getMessage());
+            return false;
         }
     }
 
     @Override
-    public void delete(int productId) {
+    public boolean delete(int productId) {
         String sql = "DELETE FROM productos WHERE id_producto = ?";
         try (Connection conn = getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, productId);
-            stmt.executeUpdate();
+            return stmt.executeUpdate() > 0;
         } catch (SQLException e) {
-            throw new RuntimeException("Error retrieving products", e);
+            System.err.println("Error deleting product: " + e.getMessage());
+            return false;
         }
     }
 

@@ -15,10 +15,8 @@ public class CustomerDAOImpl implements CustomerDAO {
 
     private Connection getConnection() throws SQLException {
         return DBConnection.getConnection();
-    }
-
-    @Override
-    public void save(Customer customer) {
+    }    @Override
+    public boolean save(Customer customer) {
         String sql = "INSERT INTO clientes (id_usuario, nombre, direccion, telefono) VALUES (?, ?, ?, ?)";
         try (Connection conn = getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -26,14 +24,13 @@ public class CustomerDAOImpl implements CustomerDAO {
             stmt.setString(2, customer.getNombre());
             stmt.setString(3, customer.getDireccion());
             stmt.setString(4, customer.getTelefono());
-            stmt.executeUpdate();
+            return stmt.executeUpdate() > 0;
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            System.err.println("Error al guardar cliente: " + e.getMessage());
+            return false;
         }
-    }
-
-    @Override
-    public void update(Customer customer) {
+    }    @Override
+    public boolean update(Customer customer) {
         String sql = "UPDATE clientes SET nombre = ?, direccion = ?, telefono = ? WHERE id_cliente = ?";
         try (Connection conn = getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -41,21 +38,23 @@ public class CustomerDAOImpl implements CustomerDAO {
             stmt.setString(2, customer.getDireccion());
             stmt.setString(3, customer.getTelefono());
             stmt.setInt(4, customer.getId());
-            stmt.executeUpdate();
+            return stmt.executeUpdate() > 0;
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            System.err.println("Error al actualizar cliente: " + e.getMessage());
+            return false;
         }
     }
 
     @Override
-    public void delete(int customerId) {
+    public boolean delete(int customerId) {
         String sql = "DELETE FROM clientes WHERE id_cliente = ?";
         try (Connection conn = getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, customerId);
-            stmt.executeUpdate();
+            return stmt.executeUpdate() > 0;
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            System.err.println("Error al eliminar cliente: " + e.getMessage());
+            return false;
         }
     }
 

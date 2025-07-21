@@ -23,6 +23,11 @@ public class Product {
 
     public int getId() { return id; }
     public void setId(int id) { this.id = id; }
+    
+    // Métodos adicionales para compatibilidad con BD
+    public int getIdProducto() { return id; }
+    public void setIdProducto(int id) { this.id = id; }
+    
     public String getNombre() { return nombre; }
     public void setNombre(String nombre) { this.nombre = nombre; }
     public String getDescripcion() { return descripcion; }
@@ -35,4 +40,9 @@ public class Product {
     public void setCategoriaId(int categoriaId) { this.categoriaId = categoriaId; }
     public String getImagenUrl() { return imagenUrl; }
     public void setImagenUrl(String imagenUrl) { this.imagenUrl = imagenUrl; }
+    
+    @Override
+    public String toString() {
+        return nombre + " - $" + precio;
+    }
 }

@@ -19,10 +19,25 @@ public class OrderDetail {
 
     public int getId() { return id; }
     public void setId(int id) { this.id = id; }
+    
+    // Métodos adicionales para compatibilidad con BD
+    public int getIdDetalle() { return id; }
+    public void setIdDetalle(int id) { this.id = id; }
+    
     public int getPedidoId() { return pedidoId; }
     public void setPedidoId(int pedidoId) { this.pedidoId = pedidoId; }
+    
+    // Métodos adicionales para compatibilidad con BD
+    public int getIdPedido() { return pedidoId; }
+    public void setIdPedido(int pedidoId) { this.pedidoId = pedidoId; }
+    
     public int getProductoId() { return productoId; }
     public void setProductoId(int productoId) { this.productoId = productoId; }
+    
+    // Métodos adicionales para compatibilidad con BD
+    public int getIdProducto() { return productoId; }
+    public void setIdProducto(int productoId) { this.productoId = productoId; }
+    
     public int getCantidad() { return cantidad; }
     public void setCantidad(int cantidad) { this.cantidad = cantidad; }
     public double getPrecio() { return precio; }

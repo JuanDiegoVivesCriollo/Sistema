@@ -10,4 +10,5 @@ public interface OrderDAO {
     void delete(int orderId);
     List<Order> findAll();
     Order findById(int orderId);
+    List<Order> findByCustomerId(int customerId);
 }

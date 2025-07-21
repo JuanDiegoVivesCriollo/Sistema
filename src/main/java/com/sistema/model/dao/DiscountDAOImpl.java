@@ -15,10 +15,8 @@ public class DiscountDAOImpl implements DiscountDAO {
 
     private Connection getConnection() throws SQLException {
         return DBConnection.getConnection();
-    }
-
-    @Override
-    public void save(Discount discount) {
+    }    @Override
+    public boolean save(Discount discount) {
         String sql = "INSERT INTO descuentos (nombre, tipo_descuento, valor, descripcion) VALUES (?, ?, ?, ?)";
         try (Connection conn = getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -26,15 +24,13 @@ public class DiscountDAOImpl implements DiscountDAO {
             stmt.setString(2, discount.getTipoDescuento());
             stmt.setDouble(3, discount.getValor());
             stmt.setString(4, discount.getDescripcion());
-            stmt.executeUpdate();
+            return stmt.executeUpdate() > 0;
         } catch (SQLException e) {
-            // Consider using a logger instead of printStackTrace in production code
             System.err.println("Error saving discount: " + e.getMessage());
+            return false;
         }
-    }
-
-    @Override
-    public void update(Discount discount) {
+    }    @Override
+    public boolean update(Discount discount) {
         String sql = "UPDATE descuentos SET nombre = ?, tipo_descuento = ?, valor = ?, descripcion = ? WHERE id_descuento = ?";
         try (Connection conn = getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -43,21 +39,23 @@ public class DiscountDAOImpl implements DiscountDAO {
             stmt.setDouble(3, discount.getValor());
             stmt.setString(4, discount.getDescripcion());
             stmt.setInt(5, discount.getId());
-            stmt.executeUpdate();
+            return stmt.executeUpdate() > 0;
         } catch (SQLException e) {
             System.err.println("Error updating discount: " + e.getMessage());
+            return false;
         }
     }
 
     @Override
-    public void delete(int discountId) {
+    public boolean delete(int discountId) {
         String sql = "DELETE FROM descuentos WHERE id_descuento = ?";
         try (Connection conn = getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, discountId);
-            stmt.executeUpdate();
+            return stmt.executeUpdate() > 0;
         } catch (SQLException e) {
             System.err.println("Error deleting discount: " + e.getMessage());
+            return false;
         }
     }
 
